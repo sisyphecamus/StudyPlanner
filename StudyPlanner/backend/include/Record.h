@@ -2,6 +2,8 @@
 #define RECORD_H
 
 #include "Task.h"
+#include "RecordManager.h"
+#include <optional>
 
 /*
     相当于日期对象，存放在DateEntry中  
@@ -10,12 +12,24 @@
 class Record
 {
     private:
-        int id;//和task一样以一个id作为唯一标识
-        int task_id;//关联task id
-        chrono::system_clock::time_point  completed_time;
+        int id; //记录的唯一标识符
+        string title;
+        string content;
+        bool completed; //记录是否已完成
     public:
-        json toJson()const;
-        Record fromJson(const json&); 
+        //第一个构造函数用于从json中恢复数据,id不由RecordManager分配
+        Record(int r_id = 0, Task t = Task(), bool is_completed = false)
+            : id(r_id), title(t.getTitle()), content(t.getContent()), completed(is_completed) {}
+
+        //第二个构造函数创建新记录,id由RecordManager分配
+        Record(Task &t, RecordManager &r);
+
+        static json toJson(const Record&);
+        static Record fromJson(const json&);
+
+        bool getCompletedStats() const { return completed; }
+
+        int getId() const { return id; }
 };
 
 #endif

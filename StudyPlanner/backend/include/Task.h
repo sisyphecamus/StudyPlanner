@@ -45,6 +45,13 @@ class Task
         
         //获取任务id
         int getId()const { return id; }
+        //获取任务内容
+        string getTitle()const { return task_content.title; }
+        string getContent()const { return task_content.content; }
+
+
+        bool getReviewStats()const {return needs_review;}
+        bool getCompletedStats()const {return completed;}        
 
         void markCompleted();
 

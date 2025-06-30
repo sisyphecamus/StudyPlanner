@@ -4,24 +4,29 @@
 #include "Record.h"
 #include "Task.h"
 
+//和TaskManager的逻辑相似
 class DateEntry
 {
     private:
-        string datestr;//字符串形式标记日期 YYYY-MM-DD
-        vector<Record>records;
+        string datestr;//字符串形式标记日期 YYYY-MM-DD  
+        map<int, Record> records; //记录的map，key为taskId 
         int total_tasks;
         int completedCount;
         double completion_rate; //total_tasks > 0 时计算
     public:
-        DateEntry(string d_str, vector<Record>& r,int t_tasks, int c_tasks, double c_rate);
-
+        //日期变更后的构造
+        DateEntry(const string& s,TaskManager& tm, RecordManager& rm);
+        //从json文件中恢复时的构造
+        DateEntry(const json& j);
         //json数据交互
-        json toJson()const;
-        DateEntry fromJson(const json&);
+        static json toJson(const DateEntry&);
+        static DateEntry fromJson(const json&);
 
         DateEntry get_DateEntry_info()const;
-
-        void recalcStats();//根据records和totalTasks重新计算completedCount和completion_rate
+        //删除DateEntry中记录,会重新计算统计数
+        void deleteRecord(int recordId); 
+        //DateEntry中内容变动后(record被用户删除),重新计算统计数
+        void recalcStats();
         
 };
 

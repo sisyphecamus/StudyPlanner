@@ -2,7 +2,7 @@
 #include <fstream>
 
 /*
-    程序启动时从.json file中读取已保存数据
+    通过.json文件进行数据存储
     约定json格式:
     {
         tasks: [
@@ -12,16 +12,23 @@
         ],
         "next_taskId" : intType_number
     } 
+    约定读入和导出的json文件名:
+    TaskManager.json : 不考虑日期变更,程序终止时写入,启动时导出
+    reviewTasks.json : 用于日期变更后仅导入和写出复习任务
 */
-void TaskManager::loadTask()
+
+//程序启动时从json读入数据:
+//当日期变更,应先读取所有数据至TaskManager,将前一天任务通过TaskManager导入到DateEntry中,然后清空tasks,再导入复习任务
+void TaskManager::loadTask(string file_name)
 {
-    ifstream i("TaskMananger.json");
+    ifstream i(file_name);
     if(!i.is_open())
     {
-        throw ios_base::failure("Failed to open file: TaskManager.json");
+        throw ios_base::failure("Failed to open file: " + file_name);
     } 
     json j;
     i>>j;
+    //导入前清空tasks
     tasks.clear();
 
     //读取task至map
@@ -29,6 +36,7 @@ void TaskManager::loadTask()
     {
         try {
             Task t = Task::fromJson(item);//读取单个task
+            tasks[t.getId()] = t; // 使用任务的id作为键
         } catch (const std::exception& e) {
             throw std::runtime_error("Error loading task from JSON: " + std::string(e.what()));
         }
@@ -43,7 +51,8 @@ void TaskManager::loadTask()
 }
 
 //程序终止时导出到json文件,约定格式同上
-void TaskManager::dumpTask() const
+// mode为0,导出所有任务;为1,导出复习任务
+void TaskManager::dumpTask(string file_name, int mode) 
 {
     json j;
     j["tasks"] = json::array();
@@ -51,17 +60,18 @@ void TaskManager::dumpTask() const
     //将tasks中的每个task转换为json格式
     for(const auto& [id, task] : tasks)
     {
-        j["tasks"].push_back(Task::toJson(task));
+        if(mode == 0 || (mode && task.getReviewStats()))
+            j["tasks"].push_back(Task::toJson(task));
     }
 
     //保存next_taskId
     j["next_taskId"] = next_taskId;
 
     //写入文件
-    ofstream o("TaskManager.json");
+    ofstream o(file_name);
     if(!o.is_open())
     {
-        throw ios_base::failure("Failed to open file: TaskManager.json");
+        throw ios_base::failure("Failed to open file: " + file_name);
     }
     o << j.dump(4); // 4 is the indentation level for pretty printing
 }
@@ -89,4 +99,27 @@ const bool new_n_review)
     task.updatePriority(new_p);
     task.updateNeedsReview(new_n_review);
     return true;
+}
+
+//将特定id的任务从tasks中移除
+bool TaskManager::deleteTask(int id)
+{
+    auto it = tasks.find(id);
+    if (it == tasks.end()) {
+        return false; // 任务未找到
+    }
+    tasks.erase(it); // 从map中删除任务
+    return true;
+}
+
+//获取当日任务完成数:遍历map
+int TaskManager::getCompletedTasks()const
+{
+    int count = 0;
+    for(const auto& [id, task] : tasks)
+    {
+        if(task.getCompletedStats())
+            count++;
+    }
+    return count;
 }
