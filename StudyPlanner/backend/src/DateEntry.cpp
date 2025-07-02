@@ -1,4 +1,7 @@
-#include "DateEntry.h"
+#include "../include/DateEntry.h"
+#include "../include/Record.h"
+#include "../include/RecordManager.h"
+#include "../include/TaskManager.h"
 
 /*
     约定单个DateEntry的json格式:
@@ -31,7 +34,7 @@ void DateEntry::recalcStats()
     }
 }
 
-//DateEntry的构造:日期变更后,获取前一天日期,以字符串形式传入,Record信息从TaskManager中获取
+//DateEntry的构造:日期变更后,获取前一天日期,以字符串形式传入,Record信息从TaskManager中获取,同时该DateEntry自动导入RecordManager,TaskManager清空tasks
 DateEntry::DateEntry(const string& s, TaskManager& tm, RecordManager& rm)
     : datestr(s), total_tasks(0), completedCount(0), completion_rate(0.0)
 {
@@ -43,7 +46,11 @@ DateEntry::DateEntry(const string& s, TaskManager& tm, RecordManager& rm)
        records[new_record_id] = Record(new_record_id, task);
     }
     total_tasks = records.size();
+    // 首次构造时计算完成数和完成率
     recalcStats();
+
+    tm.clearTasks();
+    rm.loadDateEntry(*this);
 }
 
 DateEntry::DateEntry(const json& j)

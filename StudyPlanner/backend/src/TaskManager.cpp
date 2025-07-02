@@ -1,5 +1,5 @@
-#include "TaskManager.h"
-#include <fstream>
+#include "../include/TaskManager.h"
+#include "../include/Task.h"
 
 /*
     通过.json文件进行数据存储
@@ -13,13 +13,13 @@
         "next_taskId" : intType_number
     } 
     约定读入和导出的json文件名:
-    TaskManager.json : 不考虑日期变更,程序终止时写入,启动时导出
-    reviewTasks.json : 用于日期变更后仅导入和写出复习任务
+    saved_json_file/TaskManager.json : 不考虑日期变更,程序终止时写入,启动时导出
+    saved_json_file/reviewTasks.json : 用于日期变更后仅导入和写出复习任务
 */
 
 //程序启动时从json读入数据:
 //当日期变更,应先读取所有数据至TaskManager,将前一天任务通过TaskManager导入到DateEntry中,然后清空tasks,再导入复习任务
-void TaskManager::loadTask(string file_name)
+void TaskManager::loadTaskfromJson(string file_name)
 {
     ifstream i(file_name);
     if(!i.is_open())
@@ -76,11 +76,10 @@ void TaskManager::dumpTask(string file_name, int mode)
     o << j.dump(4); // 4 is the indentation level for pretty printing
 }
 
-//创建新任务,id由TaskManager分配
-void TaskManager::createTask(const TaskContent &t_content, chrono::system_clock::time_point ddl, int p, bool n_review)
+//导入新任务
+void TaskManager::loadTask(Task& t)
 {
-    Task new_task(p, t_content, false, n_review, *this, ddl);
-    tasks[new_task.getId()] = new_task; // 使用任务的id作为键
+    tasks[t.getId()] = t; // 使用任务的id作为键
 }
 
 //修改任务
@@ -122,4 +121,16 @@ int TaskManager::getCompletedTasks()const
             count++;
     }
     return count;
+}
+
+//初步实现,会更改
+bool TaskManager::completeTask(int id)
+{
+    auto it = tasks.find(id);
+    if (it == tasks.end()) {
+        return false; // 任务未找到
+    }
+    Task& task = it->second;
+    task.markCompleted();
+    return true;
 }

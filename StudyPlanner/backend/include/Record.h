@@ -1,10 +1,11 @@
 #ifndef RECORD_H
 #define RECORD_H
 
-#include "Task.h"
-#include "RecordManager.h"
+#include "../include/Task.h"
+#include <fstream>
 #include <optional>
 
+class RecordManager; // 前向声明RecordManager类
 /*
     相当于日期对象，存放在DateEntry中  
 */
@@ -27,9 +28,9 @@ class Record
         static json toJson(const Record&);
         static Record fromJson(const json&);
 
-        bool getCompletedStats() const { return completed; }
+        inline bool getCompletedStats() const { return completed; }
 
-        int getId() const { return id; }
+        inline int getId() const { return id; }
 };
 
 #endif

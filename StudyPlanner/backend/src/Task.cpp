@@ -1,4 +1,5 @@
-#include "Task.h"
+#include "../include/Task.h"
+#include "../include/TaskManager.h"
 
 //默认构造在Task.h中给出,这里是能处理异常输入的构造函数
 Task::Task(int t_priority, TaskContent t_content, bool is_completed, bool n_review, TaskManager& m, chrono::system_clock::time_point ddl)

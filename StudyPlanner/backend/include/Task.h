@@ -5,7 +5,8 @@
 #include<string>
 #include<chrono>
 #include "json.hpp"
-#include "TaskManager.h"
+
+class TaskManager; // 前向声明TaskManager类
 
 using namespace std;
 using json = nlohmann::json;
@@ -44,14 +45,14 @@ class Task
         static Task fromJson(const json&);
         
         //获取任务id
-        int getId()const { return id; }
+        inline int getId()const { return id; }
         //获取任务内容
-        string getTitle()const { return task_content.title; }
-        string getContent()const { return task_content.content; }
+        inline string getTitle()const { return task_content.title; }
+        inline string getContent()const { return task_content.content; }
 
 
-        bool getReviewStats()const {return needs_review;}
-        bool getCompletedStats()const {return completed;}        
+        inline bool getReviewStats()const {return needs_review;}
+        inline bool getCompletedStats()const {return completed;}        
 
         void markCompleted();
 
@@ -62,8 +63,8 @@ class Task
         void updateNeedsReview(bool new_needs_review) { needs_review = new_needs_review; }
 
         //提醒调度方面
-        bool isOverDue()const;
-        chrono::minutes minutesUntilDeadline()const;//计算距离截至还有多少分钟,用于提醒调度 
+        //bool isOverDue()const;
+        //chrono::minutes minutesUntilDeadline()const;//计算距离截至还有多少分钟,用于提醒调度 
 };
 
 

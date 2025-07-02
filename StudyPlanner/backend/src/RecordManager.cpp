@@ -1,5 +1,7 @@
-#include "RecordManager.h"
-#include <fstream>
+#include "../include/RecordManager.h"
+#include "../include/DateEntry.h"
+#include "../include/Record.h"
+
 
 /*
     通过.json文件进行数据存储
@@ -28,10 +30,10 @@
 */
 
 // 从json加载数据,同时处理可能的异常
-void RecordManager::loadFromJson() {
-    ifstream i("RecordManager.json");
+void RecordManager::loadFromJson(const string& file_name) {
+    ifstream i(file_name);
     if (!i.is_open()) {
-        throw ios_base::failure("Failed to open RecordManager.json");
+        throw ios_base::failure("Failed to open " + file_name);
     }
     json j;
     i >> j;
@@ -55,20 +57,20 @@ void RecordManager::loadFromJson() {
 }
 
 // 将所有条目导出到json文件,处理可能的异常
-void RecordManager::dumpEntries()const
+void RecordManager::dumpEntries(const string& file_name) const
 {
     json j;
     j["nextRecordID"] = nextRecordID;
 
     // 读取日期条目
     for (const auto& [date_str, entry] : date_entries) {
-        j["date_entries"][date_str] = entry.toJson();
+        j["date_entries"][date_str] = DateEntry::toJson(entry);
     }
 
     // 写入文件
-    ofstream o("RecordManager.json");
+    ofstream o(file_name);
     if (!o.is_open()) {
-        throw ios_base::failure("Failed to open RecordManager.json");
+        throw ios_base::failure("Failed to open " + file_name);
     }
     o << j.dump(4); // 4 is the indentation level for pretty printing
 }

@@ -1,20 +1,29 @@
 #ifndef TASKMANAGER_H
 #define TASKMANAGER_H
 
-#include "Task.h"
-#include "ReminderScheduler.h"
+#include <iostream>
+#include "../include/Task.h"
+#include "../include/ReminderScheduler.h"
+#include <map>
+#include <string>
+#include <chrono>
+#include <fstream>
 
 class TaskManager
 {
     private:
         map<int,Task>tasks;
         int next_taskId;
-        shared_ptr<ReminderScheduler>reminder_scheduler; 
+        //shared_ptr<ReminderScheduler>reminder_scheduler; 
     public:
-        void loadTask(string file_name);//程序启动时从json读入task
+        TaskManager() : next_taskId(1) {}
+
+        void loadTaskfromJson(string file_name);//程序启动时从json读入task
         void dumpTask(string file_name, int mode);//程序终止时导出到json文件
 
-        void createTask(const TaskContent &t_content, chrono::system_clock::time_point ddl, int p, bool n_review);
+        void loadTask(Task& t);
+
+        void clearTasks() { tasks.clear(); } //清空tasks,用于日期变更时
 
         //用户重新编辑某一特定任务,以id标识
         bool updateTask(int id, const TaskContent new_content, const chrono::system_clock::time_point new_ddl, const int new_p,

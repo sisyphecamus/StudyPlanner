@@ -1,4 +1,5 @@
-#include "Record.h"
+#include "../include/Record.h"
+#include "../include/RecordManager.h"
 
 /*
     单挑record的json格式:

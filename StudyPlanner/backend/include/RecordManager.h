@@ -1,8 +1,8 @@
 #ifndef RECORDMANAGER_H
 #define RECORDMANAGER_H
 
-#include "Record.h"
-#include "DateEntry.h"
+#include "../include/Record.h"
+#include "../include/DateEntry.h"
 
 /*
     Record管理的顶层模块:
@@ -14,8 +14,8 @@ class RecordManager
        map<string,DateEntry>date_entries;
        int nextRecordID;
     public:
-        void loadFromJson();
-        void dumpEntries()const;
+        void loadFromJson(const string& file_name);
+        void dumpEntries(const string& file_name)const;
         
         bool deleteSingleEntry(string date_str);//根据recordId在对应DateEntry中删除记录
 
@@ -23,7 +23,9 @@ class RecordManager
         DateEntry getDateEntry(const string& date_str)const;//根据日期str获得单个DateEntry
 
         //获取下一个记录ID
-        int getNextId() { return nextRecordID++; }
+        inline int getNextId() { return nextRecordID++; }
+
+        void loadDateEntry(const DateEntry& de) { date_entries[de.getDateStr()] = de; }
 };
 
 #endif

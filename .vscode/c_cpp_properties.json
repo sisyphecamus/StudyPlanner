@@ -4,7 +4,9 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "E:/software_25/StudyPlanner"
+                "e:/software_25/StudyPlanner",
+                "e:/software_25/StudyPlanner/backend/src/**",
+                "e:/software_25/StudyPlanner/backend/include/**"
             ],
             "defines": [
                 "_DEBUG",
