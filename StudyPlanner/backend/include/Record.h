@@ -29,7 +29,7 @@ class Record
         static Record fromJson(const json&);
 
         inline bool getCompletedStats() const { return completed; }
-
+        inline string getTitle() const {return title;}
         inline int getId() const { return id; }
 };
 

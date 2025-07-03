@@ -1,23 +1,43 @@
-cmake_minimum_required(VERSION 3.14)
-project(StudyPlanner)
+cmake_minimum_required(VERSION 3.19)
+project(To_Do_List LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets)
 
-# 设置头文件搜索路径
-include_directories(
-    ${CMAKE_SOURCE_DIR}/backend/include
+qt_standard_project_setup()
+
+file(GLOB_RECURSE SRC
+    "${CMAKE_SOURCE_DIR}/backend/src/*.cpp"
+    "${CMAKE_SOURCE_DIR}/backend/include/*.h"
+    "${CMAKE_SOURCE_DIR}/backend/include/*.hpp"
+    "${CMAKE_SOURCE_DIR}/frontend_Qt/*.h"
+    "${CMAKE_SOURCE_DIR}/frontend_Qt/*.cpp"
+    "${CMAKE_SOURCE_DIR}/frontend_Qt/*.ui"
+    "${CMAKE_SOURCE_DIR}/frontend_Qt/*.qrc"
 )
 
-# 设置源文件变量（所有 cpp 文件）
-file(GLOB_RECURSE BACKEND_SOURCES
-    ${CMAKE_SOURCE_DIR}/backend/src/*.cpp
+qt_add_executable(To_Do_List
+    WIN32 MACOSX_BUNDLE
+    
+    ${SRC}
 )
 
-set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/test)
-
-# 添加可执行文件
-add_executable(file_io_test
-    ${CMAKE_SOURCE_DIR}/test/file_IO_test.cpp
-    ${BACKEND_SOURCES}
+target_link_libraries(To_Do_List
+    PRIVATE
+        Qt::Core
+        Qt::Widgets
 )
+
+include(GNUInstallDirs)
+
+install(TARGETS To_Do_List
+    BUNDLE  DESTINATION .
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+)
+
+qt_generate_deploy_app_script(
+    TARGET To_Do_List
+    OUTPUT_SCRIPT deploy_script
+    NO_UNSUPPORTED_PLATFORM_ERROR
+)
+install(SCRIPT ${deploy_script})

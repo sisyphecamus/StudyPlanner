@@ -13,6 +13,7 @@
 
 class RecordManager; // 前向声明RecordManager类
 //和TaskManager的逻辑相似
+class RecordShower;//edited
 class DateEntry
 {
     private:
@@ -22,6 +23,7 @@ class DateEntry
         int completedCount;
         double completion_rate; //total_tasks > 0 时计算
     public:
+        friend class RecordShower;//edited
         //日期变更后的构造
         DateEntry(const string& s,TaskManager& tm, RecordManager& rm);
         //从json文件中恢复时的构造
