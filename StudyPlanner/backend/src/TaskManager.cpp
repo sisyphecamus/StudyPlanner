@@ -11,6 +11,7 @@
            ...
         ],
         "next_taskId" : intType_number
+        "current_date": "YYYY-MM-DD" //当前日期字符串,用于日期变更时清空tasks
     } 
     约定读入和导出的json文件名:
     saved_json_file/TaskManager.json : 不考虑日期变更,程序终止时写入,启动时导出
@@ -42,9 +43,10 @@ void TaskManager::loadTaskfromJson(string file_name)
         }
     }
 
-    //读取next_taskId
+    //读取next_taskId & current_date
     try {
         next_taskId = j.at("next_taskId").get<int>();
+        current_date = j.at("current_date").get<string>();
     } catch (const std::exception& e) {
         throw std::runtime_error("Error loading next_taskId from JSON: " + std::string(e.what()));
     }
@@ -66,6 +68,7 @@ void TaskManager::dumpTask(string file_name, int mode)
 
     //保存next_taskId
     j["next_taskId"] = next_taskId;
+    j["current_date"] = current_date;
 
     //写入文件
     ofstream o(file_name);

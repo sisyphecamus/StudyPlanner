@@ -8,15 +8,20 @@
 #include <string>
 #include <chrono>
 #include <fstream>
+#include <iomanip>
+#include <sstream>
 
 class TaskManager
 {
     private:
         map<int,Task>tasks;
         int next_taskId;
+        //添加当日日期,以"YYYY-MM-DD"格式存储,用于日期变更时清空tasks,日期检测和变更时修改current_date由前端完成
+        string current_date;
         //shared_ptr<ReminderScheduler>reminder_scheduler; 
     public:
-        TaskManager() : next_taskId(1) {}
+        
+        TaskManager() :current_date("1999-01-01"), next_taskId(1) {}
 
         void loadTaskfromJson(string file_name);//程序启动时从json读入task
         void dumpTask(string file_name, int mode);//程序终止时导出到json文件
