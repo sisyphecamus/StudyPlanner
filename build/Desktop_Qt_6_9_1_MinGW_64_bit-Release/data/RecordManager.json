@@ -1,0 +1,69 @@
+{
+    "date_entries": {
+        "2024-07-02": {
+            "completedCount": 0,
+            "completion_rate": 0.0,
+            "datestr": "2024-07-02",
+            "records": [
+                {
+                    "completed": false,
+                    "content": "Updated Content of Task 1",
+                    "id": 8,
+                    "title": "Updated Task 1"
+                },
+                {
+                    "completed": false,
+                    "content": "Content of Task 2",
+                    "id": 9,
+                    "title": "Task 2"
+                },
+                {
+                    "completed": false,
+                    "content": "Content of Task 3",
+                    "id": 10,
+                    "title": "Task 3"
+                },
+                {
+                    "completed": false,
+                    "content": "Content of New Task",
+                    "id": 11,
+                    "title": "New Task"
+                }
+            ],
+            "total_tasks": 4
+        },
+        "2024-07-03": {
+            "completedCount": 0,
+            "completion_rate": 0.0,
+            "datestr": "2024-07-02",
+            "records": [
+                {
+                    "completed": false,
+                    "content": "Updated Content of Task 1",
+                    "id": 8,
+                    "title": "Updated Task 1"
+                },
+                {
+                    "completed": false,
+                    "content": "Content of Task 2",
+                    "id": 9,
+                    "title": "Task 2"
+                },
+                {
+                    "completed": false,
+                    "content": "Content of Task 3",
+                    "id": 10,
+                    "title": "Task 3"
+                },
+                {
+                    "completed": false,
+                    "content": "Content of New Task",
+                    "id": 11,
+                    "title": "New Task"
+                }
+            ],
+            "total_tasks": 4
+        }
+    },
+    "nextRecordID": 12
+}
